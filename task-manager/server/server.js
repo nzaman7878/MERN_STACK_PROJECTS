@@ -1,20 +1,13 @@
-import http from "http";
+import express from "express";
 
-const server = http.createServer((req, res) => {
-   if (req.method === "GET" && req.url === "/"){
-    res.end("Home Page");
-    return;
-   }
+const app = express();
 
-   if (req.method === "GET" && req.url === "/tasks"){
-    res.end("Tasks Page");
-    return;
-   }
+app.get("/", (req, res)=> {
+    res.send("Hello from express");
+});
 
-   res.statusCode = 404;
-    res.end("Page Not Found");
-})
 
-server.listen(5000, ()=> {
-    console.log("Server is listening on port 5000...");
+
+app.listen(5000, ()=>{
+    console.log("Server is running on port 5000");
 })
