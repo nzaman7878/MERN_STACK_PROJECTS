@@ -1,5 +1,18 @@
 import express from "express";
 
+let tasks = [
+    {
+        id: 1,
+        title: "Learn Node.js",
+        completed: true
+    },
+    {
+        id: 2,
+        title: "Learn Express.js",
+        completed: false
+    }
+];
+
 const app = express();
 
 app.get("/", (req, res)=> {
@@ -7,17 +20,7 @@ app.get("/", (req, res)=> {
 });
 
 app.get("/api/tasks", (req, res)=>{
-    res.json([
-        {
-            id :1,
-            title: "Learn Node.js",
-
-        },
-        {
-            id :2,
-            title : "Learn Express.js"
-        }
-    ])
+    res.status(200).json(tasks);
 })
 
 app.listen(5000, ()=>{
