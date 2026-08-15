@@ -35,6 +35,25 @@ app.get("/api/tasks/:id", (req, res)=>{
 res.status(200).json(task);
 })
 
+app.post("/api/tasks", ( req, res)=> {
+    const {title} = req.body; 
+
+    if(!title){
+        return res.status(400).json({
+            message: "Title is required"
+        });
+    }
+
+    const newTask = {
+        id: tasks.length + 1,
+        title,
+        completed: false
+    };
+
+    tasks.push(newTask);
+    res.status(201).json(newTask);
+});
+
 app.listen(5000, ()=>{
     console.log("Server is running on port 5000");
 })
