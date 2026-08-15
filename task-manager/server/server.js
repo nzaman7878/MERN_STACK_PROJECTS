@@ -54,6 +54,23 @@ app.post("/api/tasks", ( req, res)=> {
     res.status(201).json(newTask);
 });
 
+app.patch("/api/tasks/:id", (req, res)=>{
+    const tasksId = Number( req.params.id);
+    const task = tasks.find(tasks => tasks.id === tasksId);
+
+    if(!task){
+        return res.status(404).json({
+            message: "Task not found"
+        });
+    }
+
+    const { title, completed } = req.body;
+    if(title !== undefined) task.title = title;
+    if(completed !== undefined) task.completed = completed;
+
+    res.status(200).json(task);
+})
+
 app.listen(5000, ()=>{
     console.log("Server is running on port 5000");
 })
