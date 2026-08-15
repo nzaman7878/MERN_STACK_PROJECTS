@@ -71,7 +71,21 @@ app.patch("/api/tasks/:id", (req, res)=>{
     res.status(200).json(task);
 })
 
+app.delete("/api/tasks/:id", (req, res)=> {
+    const id = Number(req.params.id);
 
+    const taskExists = tasks.some(task => task.id === id);
+    if (!taskExists) {
+        return res.status(404).json({
+            message: "Task not found"
+        })
+    }
+
+    tasks = tasks.filter(task => task.id !== id);
+    res.status(200).json({
+        message: "Task deleted successfully"
+    });
+})
 
 
 app.listen(5000, ()=>{
