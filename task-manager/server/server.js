@@ -2,8 +2,9 @@ import "dotenv/config";
 import express from "express";
 
 import connectDB from "./src/config/db.js";
+import Task from "./src/models/task.js";
 
-connectDB();
+const PORT = process.env.PORT || 5000;
 
 let tasks = [
     {
@@ -19,6 +20,7 @@ let tasks = [
 ];
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req, res)=> {
     res.send("Hello from express");
@@ -40,7 +42,7 @@ app.get("/api/tasks/:id", (req, res)=>{
 res.status(200).json(task);
 })
 
-app.post("/api/tasks", ( req, res)=> {
+app.post("/api/tasks", async (req, res)=> {
     const {title} = req.body; 
 
     if(!title){
@@ -55,8 +57,10 @@ app.post("/api/tasks", ( req, res)=> {
         completed: false
     };
 
-    tasks.push(newTask);
-    res.status(201).json(newTask);
+    const task = await Task.create({
+    title: req.body.title
+});
+    res.status(201).json(task);
 });
 
 app.patch("/api/tasks/:id", (req, res)=>{
@@ -92,7 +96,18 @@ app.delete("/api/tasks/:id", (req, res)=> {
     });
 })
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${PORT}`);
-})
+
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
+};
+
+startServer();
