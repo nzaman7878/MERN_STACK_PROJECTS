@@ -32,9 +32,9 @@ app.get("/api/tasks", async (req, res)=>{
 res.json(tasks);
 })
 
-app.get("/api/tasks/:id", (req, res)=>{
+app.get("/api/tasks/:id", async (req, res)=>{
     const tasksId = Number(req.params.id);
-    const task = tasks.find(tasks => tasks.id === tasksId);
+    const task = await Task.findById(req.params.id);
 
     if (!task){
         res.status(404).json({
