@@ -26,8 +26,10 @@ app.get("/", (req, res)=> {
     res.send("Hello from express");
 });
 
-app.get("/api/tasks", (req, res)=>{
-    res.status(200).json(tasks);
+app.get("/api/tasks", async (req, res)=>{
+   const tasks = await Task.find();
+
+res.json(tasks);
 })
 
 app.get("/api/tasks/:id", (req, res)=>{
