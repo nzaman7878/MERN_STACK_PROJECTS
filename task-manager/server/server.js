@@ -65,10 +65,9 @@ app.post("/api/tasks", async (req, res)=> {
     res.status(201).json(task);
 });
 
-app.patch("/api/tasks/:id", (req, res)=>{
+app.patch("/api/tasks/:id", async (req, res)=>{
     const tasksId = Number( req.params.id);
-    const task = tasks.find(tasks => tasks.id === tasksId);
-
+   const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if(!task){
         return res.status(404).json({
             message: "Task not found"
@@ -82,7 +81,7 @@ app.patch("/api/tasks/:id", (req, res)=>{
     res.status(200).json(task);
 })
 
-app.delete("/api/tasks/:id", (req, res)=> {
+app.delete("/api/tasks/:id", async (req, res)=> {
     const id = Number(req.params.id);
 
     const taskExists = tasks.some(task => task.id === id);
