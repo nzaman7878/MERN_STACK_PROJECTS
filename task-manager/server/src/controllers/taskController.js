@@ -1,9 +1,13 @@
 import Task from "../models/taskModel.js";
 
- const getTasks = async (req, res) => {
-    const tasks = await Task.find();
+ const getTasks = async (req, res, next) => {
+    try {
+        const tasks = await Task.find();
 
-    res.status(200).json(tasks);
+        res.json(tasks);
+    } catch (error) {
+        next(error);
+    }
 };
 
 const createTask = async (req, res) => {
