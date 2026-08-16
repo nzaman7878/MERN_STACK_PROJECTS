@@ -1,5 +1,6 @@
 import express from "express";
 import taskRoutes from "./routes/taskRoutes.js";
+import errorHandler from "./middleware/errorMiddleware.js";
 
 const app = express();
 

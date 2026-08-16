@@ -10,20 +10,26 @@ import Task from "../models/taskModel.js";
     }
 };
 
-const createTask = async (req, res) => {
-    const { title } = req.body;
+const createTask = async (req, res, next) => {
+    try {
+        const { title } = req.body;
 
-    if (!title) {
-        return res.status(400).json({
-            message: "Title is required"
+        if (!title || !title.trim()) {
+            throw new AppError(
+                "Task title is required",
+                400
+            );
+        }
+
+        const task = await Task.create({
+            title: title.trim()
         });
+
+        res.status(201).json(task);
+
+    } catch (error) {
+        next(error);
     }
-
-    const task = await Task.create({
-        title
-    });
-
-    res.status(201).json(task);
 };
 
 const getTask = async (req, res) => {
