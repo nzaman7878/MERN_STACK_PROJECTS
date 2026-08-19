@@ -49,7 +49,7 @@ const getTask = async (req, res) => {
  const updateTask = async (req, res) => {
     const task = await Task.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        { ...req.body, user: req.user.userId },
         {
             new: true,
             runValidators: true
