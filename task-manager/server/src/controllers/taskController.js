@@ -22,7 +22,8 @@ const createTask = async (req, res, next) => {
         }
 
         const task = await Task.create({
-            title: title.trim()
+            title: title.trim(),
+            user: req.user.userId
         });
 
         res.status(201).json(task);
