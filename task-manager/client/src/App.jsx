@@ -1,28 +1,66 @@
 import { useEffect, useState } from "react";
-import api from "./services/api";
+import { getTasks } from "./services/taskService";
+import TaskForm from "./components/TaskForm";
+import TaskCard from "./components/TaskCard";
 
 function App() {
     const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchTasks = async () => {
-            const response = await api.get("/tasks");
+            try {
+                setLoading(true);
 
-            setTasks(response.data);
+                const response = await getTasks();
+
+                setTasks(response.data);
+
+            } catch (error) {
+                setError(
+                    error.response?.data?.message ||
+                    "Failed to load tasks"
+                );
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchTasks();
     }, []);
 
+    const handleTaskCreated = (newTask) => {
+        setTasks((currentTasks) => [
+            newTask,
+            ...currentTasks
+        ]);
+    };
+
+    if (loading) {
+        return <p>Loading tasks...</p>;
+    }
+
     return (
         <div>
             <h1>Task Manager</h1>
 
-            {tasks.map((task) => (
-                <div key={task._id}>
-                    <h3>{task.title}</h3>
-                </div>
-            ))}
+            <TaskForm
+                onTaskCreated={handleTaskCreated}
+            />
+
+            {error && <p>{error}</p>}
+
+            {tasks.length === 0 ? (
+                <p>No tasks yet. Create your first task.</p>
+            ) : (
+                tasks.map((task) => (
+                    <TaskCard
+                        key={task._id}
+                        task={task}
+                    />
+                ))
+            )}
         </div>
     );
 }
