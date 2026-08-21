@@ -1,9 +1,30 @@
 import { useEffect, useState } from "react";
-import { getTasks } from "./services/taskService";
+import { getTasks } from "./Services/taskService.js";
 import TaskForm from "./components/TaskForm";
 import TaskCard from "./components/TaskCard";
+import { Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+
 
 function App() {
+
+    <Routes>
+            <Route path="/" element={<Login />} />
+
+            <Route
+                path="/register"
+                element={<Register />}
+            />
+
+            <Route
+                path="/dashboard"
+                element={<Dashboard />}
+            />
+        </Routes>
+
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
