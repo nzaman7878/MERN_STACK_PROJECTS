@@ -1,19 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { registerUser } from "../services/authService";
 
 function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (event) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        console.log({
-            name,
-            email,
-            password
-        });
+        try {
+            setLoading(true);
+            setError("");
+
+            await registerUser({
+                name,
+                email,
+                password
+            });
+
+            navigate("/");
+
+        } catch (error) {
+            setError(
+                error.response?.data?.message ||
+                "Registration failed"
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -48,10 +69,17 @@ function Register() {
                     }
                 />
 
-                <button type="submit">
-                    Register
+                <button
+                    type="submit"
+                    disabled={loading}
+                >
+                    {loading
+                        ? "Creating account..."
+                        : "Register"}
                 </button>
             </form>
+
+            {error && <p>{error}</p>}
 
             <p>
                 Already have an account?{" "}
