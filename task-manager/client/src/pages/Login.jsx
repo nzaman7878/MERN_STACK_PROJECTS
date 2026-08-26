@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+
 import { loginUser } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -8,6 +10,8 @@ function Login() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const { login } = useAuth();
 
     const navigate = useNavigate();
 
@@ -23,7 +27,10 @@ function Login() {
                 password
             });
 
-            console.log(response.data);
+            login(
+                response.data.user,
+                response.data.token
+            );
 
             navigate("/dashboard");
 
